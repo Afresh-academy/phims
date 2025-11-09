@@ -15,14 +15,14 @@ interface BookingManagementProps {
 }
 
 const bookings = [
-  { id: 'BK001', patient: 'John Smith', doctor: 'Dr. Sarah Johnson', specialty: 'Cardiologist', date: 'Nov 10, 2025', time: '10:30 AM', amount: 150, status: 'Confirmed' },
-  { id: 'BK002', patient: 'Emma Wilson', doctor: 'Dr. Michael Chen', specialty: 'General Physician', date: 'Nov 10, 2025', time: '11:00 AM', amount: 100, status: 'Pending' },
-  { id: 'BK003', patient: 'Michael Brown', doctor: 'Dr. Emily Rodriguez', specialty: 'Dermatologist', date: 'Nov 11, 2025', time: '09:00 AM', amount: 120, status: 'Confirmed' },
-  { id: 'BK004', patient: 'Sarah Davis', doctor: 'Dr. James Wilson', specialty: 'Orthopedic', date: 'Nov 11, 2025', time: '02:00 PM', amount: 180, status: 'Pending' },
-  { id: 'BK005', patient: 'David Miller', doctor: 'Dr. Sarah Johnson', specialty: 'Cardiologist', date: 'Nov 12, 2025', time: '03:30 PM', amount: 150, status: 'Confirmed' },
-  { id: 'BK006', patient: 'Lisa Anderson', doctor: 'Dr. Michael Chen', specialty: 'General Physician', date: 'Nov 12, 2025', time: '04:00 PM', amount: 100, status: 'Cancelled' },
-  { id: 'BK007', patient: 'Robert Taylor', doctor: 'Dr. Emily Rodriguez', specialty: 'Dermatologist', date: 'Nov 13, 2025', time: '10:00 AM', amount: 120, status: 'Confirmed' },
-  { id: 'BK008', patient: 'Jennifer Lee', doctor: 'Dr. James Wilson', specialty: 'Orthopedic', date: 'Nov 13, 2025', time: '11:30 AM', amount: 180, status: 'Pending' },
+  { id: 'BK001', patient: 'John Smith', doctor: 'Dr. Sarah Johnson', specialty: 'Cardiologist', date: 'Nov 10, 2025', time: '10:30 AM', amount: 215400, status: 'Confirmed' },
+  { id: 'BK002', patient: 'Emma Wilson', doctor: 'Dr. Michael Chen', specialty: 'General Physician', date: 'Nov 10, 2025', time: '11:00 AM', amount: 143600, status: 'Pending' },
+  { id: 'BK003', patient: 'Michael Brown', doctor: 'Dr. Emily Rodriguez', specialty: 'Dermatologist', date: 'Nov 11, 2025', time: '09:00 AM', amount: 172320, status: 'Confirmed' },
+  { id: 'BK004', patient: 'Sarah Davis', doctor: 'Dr. James Wilson', specialty: 'Orthopedic', date: 'Nov 11, 2025', time: '02:00 PM', amount: 258480, status: 'Pending' },
+  { id: 'BK005', patient: 'David Miller', doctor: 'Dr. Sarah Johnson', specialty: 'Cardiologist', date: 'Nov 12, 2025', time: '03:30 PM', amount: 215400, status: 'Confirmed' },
+  { id: 'BK006', patient: 'Lisa Anderson', doctor: 'Dr. Michael Chen', specialty: 'General Physician', date: 'Nov 12, 2025', time: '04:00 PM', amount: 143600, status: 'Cancelled' },
+  { id: 'BK007', patient: 'Robert Taylor', doctor: 'Dr. Emily Rodriguez', specialty: 'Dermatologist', date: 'Nov 13, 2025', time: '10:00 AM', amount: 215400, status: 'Confirmed' },
+  { id: 'BK008', patient: 'Jennifer Lee', doctor: 'Dr. James Wilson', specialty: 'Orthopedic', date: 'Nov 13, 2025', time: '11:30 AM', amount: 258480, status: 'Pending' },
 ];
 
 export default function BookingManagement({ onNavigate }: BookingManagementProps) {
@@ -156,7 +156,7 @@ export default function BookingManagement({ onNavigate }: BookingManagementProps
                     </div>
                   </div>
                 </TableCell>
-                <TableCell className="amount">${booking.amount}</TableCell>
+                <TableCell className="amount">₦{booking.amount}</TableCell>
                 <TableCell>{getStatusBadge(booking.status)}</TableCell>
                 <TableCell>
                   <DropdownMenu>

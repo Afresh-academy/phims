@@ -51,9 +51,9 @@ const transactionData = [
     date: "Nov 8, 2025",
     patient: "John Smith",
     doctor: "Dr. Sarah Johnson",
-    amount: 150,
-    clinicShare: 142.5,
-    platformFee: 7.5,
+    amount: 215400,
+    clinicShare: 204630,
+    platformFee: 10770,
     status: "Completed",
   },
   {
@@ -61,9 +61,9 @@ const transactionData = [
     date: "Nov 8, 2025",
     patient: "Emma Wilson",
     doctor: "Dr. Michael Chen",
-    amount: 100,
-    clinicShare: 95,
-    platformFee: 5,
+    amount: 143600,
+    clinicShare: 136420,
+    platformFee: 7180,
     status: "Completed",
   },
   {
@@ -71,9 +71,9 @@ const transactionData = [
     date: "Nov 7, 2025",
     patient: "Michael Brown",
     doctor: "Dr. Emily Rodriguez",
-    amount: 120,
-    clinicShare: 114,
-    platformFee: 6,
+    amount: 172320,
+    clinicShare: 163704,
+    platformFee: 8616,
     status: "Completed",
   },
   {
@@ -81,9 +81,9 @@ const transactionData = [
     date: "Nov 7, 2025",
     patient: "Sarah Davis",
     doctor: "Dr. James Wilson",
-    amount: 180,
-    clinicShare: 171,
-    platformFee: 9,
+    amount: 258480,
+    clinicShare: 245556,
+    platformFee: 12924,
     status: "Completed",
   },
   {
@@ -91,9 +91,9 @@ const transactionData = [
     date: "Nov 6, 2025",
     patient: "David Miller",
     doctor: "Dr. Sarah Johnson",
-    amount: 150,
-    clinicShare: 142.5,
-    platformFee: 7.5,
+    amount: 215400,
+    clinicShare: 204630,
+    platformFee: 10770,
     status: "Completed",
   },
 ];
@@ -271,7 +271,7 @@ export default function Reports({ onNavigate }: ReportsProps) {
               </div>
             </div>
             <h3 className="summary-card-title">Total Revenue</h3>
-            <p className="summary-card-value">₦‎75,000</p>
+            <p className="summary-card-value">₦‎107700000</p>
             <p className="summary-card-description">Selected period</p>
           </Card>
 
@@ -430,13 +430,13 @@ export default function Reports({ onNavigate }: ReportsProps) {
                       {transaction.doctor}
                     </TableCell>
                     <TableCell className="amount">
-                      ${transaction.amount}
+                      ₦{transaction.amount}
                     </TableCell>
                     <TableCell className="clinic-share">
-                      ${transaction.clinicShare}
+                      ₦{transaction.clinicShare}
                     </TableCell>
                     <TableCell className="platform-fee">
-                      ${transaction.platformFee}
+                      ₦{transaction.platformFee}
                     </TableCell>
                     <TableCell>
                       <span className="status-badge-completed">

@@ -1,4 +1,4 @@
-import { Users, Calendar, DollarSign, TrendingUp, ArrowUpRight, ArrowDownRight, Download } from 'lucide-react';
+import { Users, Calendar, Banknote, TrendingUp, ArrowUpRight, ArrowDownRight, Download } from 'lucide-react';
 import { Button } from '../UI/button';
 import { Card } from '../UI/card';
 import { Badge } from '../UI/badge';
@@ -11,12 +11,12 @@ interface AdminDashboardProps {
 
 // Mock Data
 const revenueData = [
-  { month: 'Jan', clinic: 45600, platform: 2400 },
-  { month: 'Feb', clinic: 52250, platform: 2750 },
-  { month: 'Mar', clinic: 48450, platform: 2550 },
-  { month: 'Apr', clinic: 61750, platform: 3250 },
-  { month: 'May', clinic: 68400, platform: 3600 },
-  { month: 'Jun', clinic: 71250, platform: 3750 },
+  { month: 'Jan', clinic: 65481600, platform: 3446400 },
+  { month: 'Feb', clinic: 75031000, platform: 3949000 },
+  { month: 'Mar', clinic: 69574200, platform: 3661800 },
+  { month: 'Apr', clinic: 88673000, platform: 4667000 },
+  { month: 'May', clinic: 98222400, platform:  5169600},
+  { month: 'Jun', clinic: 102315000, platform: 5385000 },
 ];
 
 const bookingsData = [
@@ -30,15 +30,15 @@ const bookingsData = [
 ];
 
 const revenueSplitData = [
-  { name: 'Clinic Revenue (95%)', value: 71250, color: '#007BFF' },
-  { name: 'Platform Fee (5%)', value: 3750, color: '#00B894' },
+  { name: 'Clinic Revenue (95%)', value: 102315000, color: '#007BFF' },
+  { name: 'Platform Fee (5%)', value: 5385000, color: '#00B894' },
 ];
 
 const recentBookings = [
-  { id: 1, patient: 'John Smith', doctor: 'Dr. Sarah Johnson', amount: 150, status: 'Confirmed', date: 'Nov 8, 2025' },
-  { id: 2, patient: 'Emma Wilson', doctor: 'Dr. Michael Chen', amount: 100, status: 'Pending', date: 'Nov 8, 2025' },
-  { id: 3, patient: 'Michael Brown', doctor: 'Dr. Emily Rodriguez', amount: 120, status: 'Confirmed', date: 'Nov 8, 2025' },
-  { id: 4, patient: 'Sarah Davis', doctor: 'Dr. James Wilson', amount: 180, status: 'Confirmed', date: 'Nov 7, 2025' },
+  { id: 1, patient: 'John Smith', doctor: 'Dr. Sarah Johnson', amount: 215400, status: 'Confirmed', date: 'Nov 8, 2025' },
+  { id: 2, patient: 'Emma Wilson', doctor: 'Dr. Michael Chen', amount: 143600, status: 'Pending', date: 'Nov 8, 2025' },
+  { id: 3, patient: 'Michael Brown', doctor: 'Dr. Emily Rodriguez', amount: 172320, status: 'Confirmed', date: 'Nov 8, 2025' },
+  { id: 4, patient: 'Sarah Davis', doctor: 'Dr. James Wilson', amount: 258480, status: 'Confirmed', date: 'Nov 7, 2025' },
 ];
 
 export default function AdminDashboard({ onNavigate }: AdminDashboardProps) {
@@ -90,7 +90,7 @@ export default function AdminDashboard({ onNavigate }: AdminDashboardProps) {
       <Card className="stat-card-item">
         <div className="stat-card-header">
           <div className="icon-container bg-purple-light">
-            <DollarSign className="icon-purple" />
+            <Banknote className="icon-purple" />
           </div>
           <Badge className="badge-success">
             <ArrowUpRight className="badge-icon" />
@@ -98,7 +98,7 @@ export default function AdminDashboard({ onNavigate }: AdminDashboardProps) {
           </Badge>
         </div>
         <h3 className="stat-card-title">Total Revenue</h3>
-        <p className="stat-card-value"> ₦‎75,000</p>
+        <p className="stat-card-value"> ₦‎102,315,000</p>
       </Card>
 
       <Card className="stat-card-item">
@@ -112,7 +112,7 @@ export default function AdminDashboard({ onNavigate }: AdminDashboardProps) {
           </Badge>
         </div>
         <h3 className="stat-card-title">Platform Fee</h3>
-        <p className="stat-card-value">₦‎3,750</p>
+        <p className="stat-card-value">₦‎5,385,000</p>
       </Card>
     </div>
 
@@ -237,7 +237,7 @@ export default function AdminDashboard({ onNavigate }: AdminDashboardProps) {
                 <div className="color-dot" style={{ backgroundColor: item.color }} />
                 <span className="revenue-name">{item.name}</span>
               </div>
-              <span className="revenue-amount">${item.value.toLocaleString()}</span>
+              <span className="revenue-amount">₦{item.value.toLocaleString()}</span>
             </div>
           ))}
         </div>
@@ -268,7 +268,7 @@ export default function AdminDashboard({ onNavigate }: AdminDashboardProps) {
                 <p className="booking-date">{booking.date}</p>
               </div>
               <div className="booking-details">
-                <p className="booking-amount">${booking.amount}</p>
+                <p className="booking-amount">₦{booking.amount}</p>
                 <Badge 
                   variant={booking.status === 'Confirmed' ? 'default' : 'secondary'}
                   className={booking.status === 'Confirmed' ? 'badge-confirmed' : 'badge-secondary'}

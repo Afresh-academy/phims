@@ -65,7 +65,7 @@ export default function AdminLogin({ onAuth, onBack }: AdminLoginProps) {
           <Input
             id="admin-email"
             type="email"
-            placeholder="admin@healthcarebase.com"
+            placeholder="cbrilliance@gmail.com"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             className="login-input"

@@ -7,6 +7,7 @@ import {
   Menu,
   X,
   LogOut,
+  Banknote,
 } from "lucide-react";
 import { Button } from "../UI/button";
 import { useState } from "react";
@@ -40,7 +41,7 @@ export default function AdminLayout({
     {
       id: "remittance",
       label: "Remittance",
-      icon: DollarSign,
+      icon: Banknote,
       screen: "remittance",
     },
     { id: "reports", label: "Reports", icon: FileText, screen: "reports" },

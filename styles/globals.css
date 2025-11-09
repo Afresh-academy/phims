@@ -33,7 +33,7 @@ body {
   font-weight: 400;
   line-height: 1.5;
   color: #111827;
-  background-color: #ffffff;
+  background-color: rgb(225, 225, 225);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   min-height: 100vh;
@@ -2882,11 +2882,6 @@ input[type="radio"]:focus {
   display: block;
 }
 
-.filter-select {
-  border-radius: 0.5rem;
-  width: 100%;
-}
-
 .filter-icon {
   width: 1rem;
   height: 1rem;
@@ -3655,7 +3650,7 @@ input[type="radio"]:focus {
 /* Alert in Dark Mode */
 @media (prefers-color-scheme: dark) {
   .alert-primary {
-    background-color: rgba(0, 123, 255, 0.1);
+    /* background-color: rgba(0, 123, 255, 0.1); */
     border-color: #007bff;
     color: #b3d9ff;
   }
@@ -7180,11 +7175,7 @@ input[type="radio"]:focus {
   background-color: #e7f3ff;
 }
 
-/* Status Badge Variants */
-.badge-completed {
-  background-color: #d1fae5;
-  color: #059669;
-}
+
 
 .badge-available {
   background-color: #dbeafe;
@@ -11951,11 +11942,7 @@ input:checked + .switch-slider:before {
 }
 
 /* Badge Variants */
-[data-slot="badge"][data-variant="default"] {
-  border-color: transparent;
-  background-color: #007bff;
-  color: #ffffff;
-}
+
 
 [data-slot="badge"][data-variant="default"]:hover {
   background-color: rgba(0, 123, 255, 0.9);
@@ -12202,7 +12189,7 @@ input:checked + .switch-slider:before {
 /* Dark mode outline styles */
 @media (prefers-color-scheme: dark) {
   [data-slot="button"][data-variant="outline"] {
-    background-color: rgba(0, 0, 0, 0.3);
+    background-color: #e2e8f0;
     border-color: #374151;
   }
   
@@ -17932,10 +17919,7 @@ input[type="radio"]:focus {
   width: 100%;
 }
 
-.filter-select {
-  width: 100%;
-  border-radius: 0.5rem;
-}
+
 
 @media (min-width: 768px) {
   .filter-select {
@@ -27675,11 +27659,12 @@ input:checked + .switch-slider:before {
   display: none;
 }
 
-@media (min-width: 768px) {
+@media (min-width: 920px) {
   .landing-nav {
     display: flex;
     align-items: center;
     gap: 2rem;
+    font-size: 14px;
   }
 }
 
@@ -27696,7 +27681,7 @@ input:checked + .switch-slider:before {
   display: none;
 }
 
-@media (min-width: 768px) {
+@media (min-width: 920px) {
   .landing-actions {
     display: flex;
     align-items: center;
@@ -27708,7 +27693,7 @@ input:checked + .switch-slider:before {
   display: block;
 }
 
-@media (min-width: 768px) {
+@media (min-width: 919.9px) {
   .landing-mobile-menu-btn {
     display: none;
   }
@@ -27720,7 +27705,7 @@ input:checked + .switch-slider:before {
   background-color: #ffffff;
 }
 
-@media (min-width: 768px) {
+@media (min-width: 920px) {
   .landing-mobile-menu {
     display: none;
   }
@@ -27867,6 +27852,34 @@ input:checked + .switch-slider:before {
   border-radius: 1rem;
   overflow: hidden;
   box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  padding: 14px;
+  width: 48rem;
+  object-fit: contain;
+}
+
+@media (max-width: 818px) {
+    .landing-hero-image-container {
+      width: 37rem;
+    }
+  }
+
+@media (max-width: 550px) {
+    .landing-hero-image-container {
+      width: 27rem;
+      height: 30rem;
+      object-fit: contain;
+      
+    }
+  }
+
+  @media (max-width: 480px) {
+    .landing-hero-image-container {
+        width: 28.5rem;
+        height: 28rem;
+        -o-object-fit: contain;
+        object-fit: contain;
+        padding: 0;
+    }
 }
 
 .landing-hero-float-card {
@@ -32314,7 +32327,7 @@ input[type="radio"]:focus {
 }
 
 /* Dark mode select trigger */
-@media (prefers-color-scheme: dark) {
+/* @media (prefers-color-scheme: dark) {
   [data-slot="select-trigger"] {
     background-color: rgba(0, 0, 0, 0.3);
   }
@@ -32322,7 +32335,7 @@ input[type="radio"]:focus {
   [data-slot="select-trigger"]:hover {
     background-color: rgba(0, 0, 0, 0.5);
   }
-}
+} */
 
 /* Select Trigger Placeholder */
 [data-slot="select-trigger"][data-placeholder] {

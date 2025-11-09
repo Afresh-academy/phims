@@ -1,4 +1,4 @@
-import { DollarSign, TrendingUp, Download, Calendar, Building2, Wallet } from 'lucide-react';
+import { Banknote, TrendingUp, Download, Calendar, Building2, Wallet } from 'lucide-react';
 import { Button } from '../UI/button';
 import { Card } from '../UI/card';
 import { Badge } from '../UI/badge';
@@ -13,20 +13,20 @@ interface RemittanceProps {
 }
 
 const monthlyData = [
-  { month: 'Jan', clinic: 45600, platform: 2400 },
-  { month: 'Feb', clinic: 52250, platform: 2750 },
-  { month: 'Mar', clinic: 48450, platform: 2550 },
-  { month: 'Apr', clinic: 61750, platform: 3250 },
-  { month: 'May', clinic: 68400, platform: 3600 },
-  { month: 'Jun', clinic: 71250, platform: 3750 },
+  { month: 'Jan', clinic: 65481600, platform: 3446400 },
+  { month: 'Feb', clinic: 75031000, platform: 3949000 },
+  { month: 'Mar', clinic: 69574200, platform: 3661800 },
+  { month: 'Apr', clinic: 88673000, platform: 4667000 },
+  { month: 'May', clinic: 98222400, platform: 5169600 },
+  { month: 'Jun', clinic: 102315000, platform: 5385000 },
 ];
 
 const remittanceTransactions = [
-  { id: 'RM001', clinic: 'City Heart Clinic', totalBookings: 45, grossRevenue: 6750, clinicShare: 6412.50, platformFee: 337.50, status: 'Paid', date: 'Nov 1, 2025' },
-  { id: 'RM002', clinic: 'Central Medical Center', totalBookings: 38, grossRevenue: 3800, clinicShare: 3610, platformFee: 190, status: 'Paid', date: 'Nov 1, 2025' },
-  { id: 'RM003', clinic: 'Skin Care Excellence', totalBookings: 52, grossRevenue: 6240, clinicShare: 5928, platformFee: 312, status: 'Pending', date: 'Nov 8, 2025' },
-  { id: 'RM004', clinic: 'Joint & Bone Center', totalBookings: 31, grossRevenue: 5580, clinicShare: 5301, platformFee: 279, status: 'Pending', date: 'Nov 8, 2025' },
-  { id: 'RM005', clinic: 'City Heart Clinic', totalBookings: 42, grossRevenue: 6300, clinicShare: 5985, platformFee: 315, status: 'Processing', date: 'Nov 7, 2025' },
+  { id: 'RM001', clinic: 'City Heart Clinic', totalBookings: 45, grossRevenue: 9693000, clinicShare: 9208350.00, platformFee: 484650.00, status: 'Paid', date: 'Nov 1, 2025' },
+  { id: 'RM002', clinic: 'Central Medical Center', totalBookings: 38, grossRevenue: 5456800, clinicShare: 5183960, platformFee: 272840.00, status: 'Paid', date: 'Nov 1, 2025' },
+  { id: 'RM003', clinic: 'Skin Care Excellence', totalBookings: 52, grossRevenue: 8960640, clinicShare: 8512608, platformFee: 448032.00, status: 'Pending', date: 'Nov 8, 2025' },
+  { id: 'RM004', clinic: 'Joint & Bone Center', totalBookings: 31, grossRevenue: 8012880, clinicShare: 7612236, platformFee: 400644.00, status: 'Pending', date: 'Nov 8, 2025' },
+  { id: 'RM005', clinic: 'City Heart Clinic', totalBookings: 42, grossRevenue: 9046800, clinicShare: 8594460, platformFee: 452340.00, status: 'Processing', date: 'Nov 7, 2025' },
 ];
 
 export default function Remittance({ onNavigate }: RemittanceProps) {
@@ -79,11 +79,11 @@ export default function Remittance({ onNavigate }: RemittanceProps) {
       <Card className="summary-card">
         <div className="summary-card-header">
           <div className="summary-icon bg-blue-light">
-            <DollarSign className="icon-blue" />
+            <Banknote className="icon-blue" />
           </div>
         </div>
         <h3 className="summary-card-title">Total Revenue</h3>
-        <p className="summary-card-value">${totalGrossRevenue.toLocaleString()}</p>
+        <p className="summary-card-value">₦{totalGrossRevenue.toLocaleString()}</p>
         <p className="summary-card-description">All transactions</p>
       </Card>
 
@@ -94,7 +94,7 @@ export default function Remittance({ onNavigate }: RemittanceProps) {
           </div>
         </div>
         <h3 className="summary-card-title">Clinic Share (95%)</h3>
-        <p className="summary-card-value">${totalClinicShare.toLocaleString()}</p>
+        <p className="summary-card-value">₦{totalClinicShare.toLocaleString()}</p>
         <p className="summary-card-description">To be distributed</p>
       </Card>
 
@@ -105,7 +105,7 @@ export default function Remittance({ onNavigate }: RemittanceProps) {
           </div>
         </div>
         <h3 className="summary-card-title">Platform Fee (5%)</h3>
-        <p className="summary-card-value">${totalPlatformFee.toLocaleString()}</p>
+        <p className="summary-card-value">₦{totalPlatformFee.toLocaleString()}</p>
         <p className="summary-card-description">Platform earnings</p>
       </Card>
 
@@ -145,7 +145,7 @@ export default function Remittance({ onNavigate }: RemittanceProps) {
           <XAxis dataKey="month" stroke="#9ca3af" />
           <YAxis stroke="#9ca3af" />
           <Tooltip 
-            formatter={(value: number) => `$${value.toLocaleString()}`}
+            formatter={(value: number) => `₦${value.toLocaleString()}`}
             contentStyle={{ 
               backgroundColor: 'white', 
               border: '1px solid #e5e7eb',
@@ -187,9 +187,9 @@ export default function Remittance({ onNavigate }: RemittanceProps) {
                 <TableCell className="transaction-id">{transaction.id}</TableCell>
                 <TableCell className="clinic-name">{transaction.clinic}</TableCell>
                 <TableCell className="bookings-count">{transaction.totalBookings}</TableCell>
-                <TableCell className="gross-revenue">${transaction.grossRevenue.toLocaleString()}</TableCell>
-                <TableCell className="clinic-share">${transaction.clinicShare.toLocaleString()}</TableCell>
-                <TableCell className="platform-fee">${transaction.platformFee.toLocaleString()}</TableCell>
+                <TableCell className="gross-revenue">₦{transaction.grossRevenue.toLocaleString()}</TableCell>
+                <TableCell className="clinic-share">₦{transaction.clinicShare.toLocaleString()}</TableCell>
+                <TableCell className="platform-fee">₦{transaction.platformFee.toLocaleString()}</TableCell>
                 <TableCell>{getStatusBadge(transaction.status)}</TableCell>
                 <TableCell className="transaction-date">
                   <div className="date-container">
@@ -225,7 +225,7 @@ export default function Remittance({ onNavigate }: RemittanceProps) {
     <Card className="info-card">
       <div className="info-content">
         <div className="info-icon">
-          <DollarSign className="info-icon-svg" />
+          <Banknote className="info-icon-svg" />
         </div>
         <div>
           <h3 className="info-title">Revenue Split Information</h3>

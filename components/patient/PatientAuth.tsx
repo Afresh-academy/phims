@@ -194,6 +194,18 @@ export default function PatientAuth({ onAuth, onBack }: PatientAuthProps) {
                   />
                 </div>
 
+                <div className="form-group">
+                  <Label htmlFor="signup-password" className="form-label">Confirm Password</Label>
+                  <Input
+                    id="signup-confirm-password"
+                    type="password"
+                    placeholder="••••••••"
+                    value={signupPassword}
+                    onChange={(e) => setSignupPassword(e.target.value)}
+                    className="patient-auth-input"
+                  />
+                </div>
+
                 <Button
                   type="submit"
                   className="patient-auth-submit-btn patient-auth-signup-btn"
