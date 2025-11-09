@@ -41,7 +41,7 @@ export default function AdminLogin({ onAuth, onBack }: AdminLoginProps) {
     {/* Logo */}
     <div className="logo-container">
       <div className="logo-icon">
-        <Activity className="logo-icon-svg" />
+        <img src="/imports/logo.jpg" className="logo" alt="" />
       </div>
       <div className="logo-text">
         <h2 className="logo-title">Healthcare Base</h2>

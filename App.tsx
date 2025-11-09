@@ -30,8 +30,8 @@ export default function App() {
   const [isPatientAuthenticated, setIsPatientAuthenticated] = useState(false);
   const [isAdminAuthenticated, setIsAdminAuthenticated] = useState(false);
   const [userProfile, setUserProfile] = useState({
-    name: 'John Doe',
-    email: 'john.doe@example.com',
+    name: 'cbrilliance',
+    email: 'cbrilliance.io',
     phone: '+1 234 567 8900',
   });
   const [currentBooking, setCurrentBooking] = useState<BookingData | null>(null);

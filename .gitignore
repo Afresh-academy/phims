@@ -17,6 +17,7 @@ temp/
 .cache/
 vite-dist/
 backend/
+Attributions.md/
 
 # === Environment files ===
 .env

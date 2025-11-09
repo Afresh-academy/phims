@@ -39,7 +39,7 @@ export default function WelcomeScreen({ onNavigate }: WelcomeScreenProps) {
           {/* Logo */}
           <div className="welcome-logo">
             <div className="welcome-logo-icon">
-              <Activity className="icon-xl text-white" />
+              <img src="/imports/logo.jpg" className="logo" alt="" />
             </div>
             <div className="welcome-logo-text">
               <h1 className="welcome-logo-title">Healthcare Base</h1>

@@ -127,7 +127,7 @@ export default function LandingPage({ onNavigate }: LandingPageProps) {
             {/* Logo */}
             <div className="landing-logo">
               <div className="landing-logo-icon">
-                <Heart className="w-6 h-6 text-white" />
+                <img src="/imports/logo.jpg" className='logo' alt="" />
               </div>
               <div className="landing-logo-text">
                 <h2>Healthcare Base</h2>
@@ -202,7 +202,7 @@ export default function LandingPage({ onNavigate }: LandingPageProps) {
       <section className="landing-hero">
         <div className="landing-hero-container">
           <div className="landing-hero-content">
-            <div>
+            <div className="landing-hero-content">
               <div className="landing-hero-badge">
                 <p>🏥 Trusted by 50,000+ Patients</p>
               </div>
@@ -241,7 +241,7 @@ export default function LandingPage({ onNavigate }: LandingPageProps) {
             <div className="landing-hero-image">
               <div className="landing-hero-image-container">
                 <ImageWithFallback
-                  src="https://images.unsplash.com/photo-1758691461990-03b49d969495?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtZWRpY2FsJTIwZG9jdG9yJTIwcGF0aWVudCUyMGNvbnN1bHRhdGlvbnxlbnwxfHx8fDE3NjI0OTMzNzZ8MA&ixlib=rb-4.1.0&q=80&w=1080"
+                  src="/imports/main-w.jpg"
                   alt="Healthcare Professional"
                 />
               </div>
@@ -408,7 +408,7 @@ export default function LandingPage({ onNavigate }: LandingPageProps) {
           <div className="landing-providers-content">
             <div className="landing-providers-image">
               <ImageWithFallback
-                src="https://images.unsplash.com/photo-1758691463610-3c2ecf5fb3fa?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxoZWFsdGhjYXJlJTIwdGVjaG5vbG9neSUyMG1vZGVybnxlbnwxfHx8fDE3NjI0OTIzMDl8MA&ixlib=rb-4.1.0&q=80&w=1080"
+                src="/imports/doc2.jpg"
                 alt="Healthcare Technology"
               />
             </div>

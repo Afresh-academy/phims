@@ -76,7 +76,7 @@ export default function PatientDashboard({ onNavigate, userProfile }: PatientDas
               </p>
             </div>
             <div className="banner-icon-container">
-              <Activity className="banner-icon" />
+              <img src="/imports/logo.jpg" className='logo' alt="" />
             </div>
           </div>
         </Card>

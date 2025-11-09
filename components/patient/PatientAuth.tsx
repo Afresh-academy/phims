@@ -58,7 +58,7 @@ export default function PatientAuth({ onAuth, onBack }: PatientAuthProps) {
         {/* Logo */}
         <div className="patient-auth-logo">
           <div className="patient-auth-logo-icon">
-            <Activity className="patient-auth-logo-icon-svg" />
+            <img src="/imports/logo.jpg" className='logo' alt="" />
           </div>
           <div className="patient-auth-logo-text">
             <h2 className="patient-auth-logo-title">Healthcare Base</h2>
