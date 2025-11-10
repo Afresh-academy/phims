@@ -1,8 +1,19 @@
-import { Calendar, Bell, FileText, Activity, Clock, Plus, User } from 'lucide-react';
-import { Button } from '../UI/button';
-import { Card } from '../UI/card';
-import { Badge } from '../UI/badge';
-import PatientLayout from '../shared/PatientLayout';
+import {
+  Calendar,
+  Bell,
+  FileText,
+  Activity,
+  Clock,
+  Plus,
+  User,
+} from "lucide-react";
+import { Button } from "../UI/button";
+import { Card } from "../UI/card";
+import { Badge } from "../UI/badge";
+import PatientLayout from "../shared/PatientLayout";
+import { useEffect, useState } from "react";
+import authService from "../../services/authService";
+import { toast } from "sonner";
 
 interface PatientDashboardProps {
   onNavigate: (screen: string) => void;
@@ -12,71 +23,125 @@ interface PatientDashboardProps {
     phone: string;
   };
 }
+interface Hospital {
+  name: string;
+  doctors: Array<{
+    name: string;
+    specialty: string;
+  }>;
+}
 
 const upcomingAppointments = [
   {
     id: 1,
-    doctor: 'Dr. Sarah Johnson',
-    specialty: 'Cardiologist',
-    date: 'Nov 10, 2025',
-    time: '10:30 AM',
-    clinic: 'City Heart Clinic',
-    status: 'Confirmed',
+    doctor: "Dr. Sarah Johnson",
+    specialty: "Cardiologist",
+    date: "Nov 10, 2025",
+    time: "10:30 AM",
+    clinic: "City Heart Clinic",
+    status: "Confirmed",
   },
   {
     id: 2,
-    doctor: 'Dr. Michael Chen',
-    specialty: 'General Physician',
-    date: 'Nov 15, 2025',
-    time: '2:00 PM',
-    clinic: 'Central Medical Center',
-    status: 'Pending',
+    doctor: "Dr. Michael Chen",
+    specialty: "General Physician",
+    date: "Nov 15, 2025",
+    time: "2:00 PM",
+    clinic: "Central Medical Center",
+    status: "Pending",
   },
 ];
 
 const notifications = [
   {
     id: 1,
-    message: 'Your appointment with Dr. Sarah Johnson is confirmed',
-    time: '2 hours ago',
+    message: "Your appointment with Dr. Sarah Johnson is confirmed",
+    time: "2 hours ago",
     unread: true,
   },
   {
     id: 2,
-    message: 'Lab results are now available',
-    time: '1 day ago',
+    message: "Lab results are now available",
+    time: "1 day ago",
     unread: true,
   },
   {
     id: 3,
-    message: 'Prescription refill reminder',
-    time: '2 days ago',
+    message: "Prescription refill reminder",
+    time: "2 days ago",
     unread: false,
   },
 ];
 
 const healthRecordsSummary = [
-  { label: 'Blood Type', value: 'A+' },
-  { label: 'Allergies', value: 'None' },
-  { label: 'Last Checkup', value: 'Oct 15, 2025' },
-  { label: 'Prescriptions', value: '2 Active' },
+  { label: "Blood Type", value: "A+" },
+  { label: "Allergies", value: "None" },
+  { label: "Last Checkup", value: "Oct 15, 2025" },
+  { label: "Prescriptions", value: "2 Active" },
 ];
 
-export default function PatientDashboard({ onNavigate, userProfile }: PatientDashboardProps) {
+export default function PatientDashboard({
+  onNavigate,
+  userProfile,
+}: PatientDashboardProps) {
+  const [hospitals, setHospitals] = useState<Hospital[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  // Fetch hospitals data on component mount
+  useEffect(() => {
+    const fetchHospitalsData = async () => {
+      try {
+        console.log("🔄 Fetching hospitals data from backend...");
+
+        // Add a small delay to allow token storage to complete after signup
+        await new Promise((resolve) => setTimeout(resolve, 200));
+
+        // Call the backend API directly
+        // The API will return an error if not authenticated
+        const response = await authService.displayListOfHospitals();
+
+        console.log("📊 Hospitals API response:", response);
+
+        // Check if request was successful
+        if (response.success) {
+          setHospitals(response.hospitals || []);
+          console.log("✅ Hospitals data set:", response.hospitals);
+        } else {
+          // If authentication failed, the error message will tell us
+          console.warn("⚠️ Failed to fetch hospitals:", response.message);
+          setError(response.message || "Failed to fetch hospitals data");
+        }
+      } catch (error: any) {
+        console.error("❌ Error fetching hospitals data:", error);
+        setError(error.message || "Failed to load hospitals data");
+      } finally {
+        setLoading(false);
+        console.log("🔍 Patient - hospitals data fetch complete");
+      }
+    };
+
+    fetchHospitalsData();
+  }, []);
   return (
-    <PatientLayout onNavigate={onNavigate} activeScreen="dashboard" userProfile={userProfile}>
+    <PatientLayout
+      onNavigate={onNavigate}
+      activeScreen="dashboard"
+      userProfile={userProfile}>
       <div className="dashboard-space">
         {/* Welcome Banner */}
         <Card className="welcome-banner">
           <div className="banner-content">
             <div>
-              <h1 className="banner-title">Welcome back, {userProfile.name.split(' ')[0]}!</h1>
+              <h1 className="banner-title">
+                Welcome back, {userProfile.name.split(" ")[0]}!
+              </h1>
               <p className="banner-subtitle">
                 You have {upcomingAppointments.length} upcoming appointments
               </p>
             </div>
             <div className="banner-icon-container">
-              <img src="/imports/logo.jpg" className='logo' alt="" />
+              <img src="/imports/logo.jpg" className="logo" alt="" />
             </div>
           </div>
         </Card>
@@ -84,9 +149,8 @@ export default function PatientDashboard({ onNavigate, userProfile }: PatientDas
         {/* Quick Actions */}
         <div className="quick-actions-grid">
           <Button
-            onClick={() => onNavigate('book-appointment')}
-            className="quick-action-primary"
-          >
+            onClick={() => onNavigate("book-appointment")}
+            className="quick-action-primary">
             <Plus className="quick-action-icon" />
             <span>Book a Doctor</span>
           </Button>
@@ -98,15 +162,16 @@ export default function PatientDashboard({ onNavigate, userProfile }: PatientDas
               </div>
               <div>
                 <p className="quick-action-label">Appointments</p>
-                <p className="quick-action-value">{upcomingAppointments.length}</p>
+                <p className="quick-action-value">
+                  {upcomingAppointments.length}
+                </p>
               </div>
             </div>
           </Card>
 
-          <Card 
+          <Card
             className="quick-action-card"
-            onClick={() => onNavigate('records')}
-          >
+            onClick={() => onNavigate("records")}>
             <div className="quick-action-content">
               <div className="quick-action-icon-container bg-green-light">
                 <FileText className="quick-action-card-icon icon-green" />
@@ -118,17 +183,18 @@ export default function PatientDashboard({ onNavigate, userProfile }: PatientDas
             </div>
           </Card>
 
-          <Card 
+          <Card
             className="quick-action-card"
-            onClick={() => onNavigate('notifications')}
-          >
+            onClick={() => onNavigate("notifications")}>
             <div className="quick-action-content">
               <div className="quick-action-icon-container bg-orange-light">
                 <Bell className="quick-action-card-icon icon-orange" />
               </div>
               <div>
                 <p className="quick-action-label">Notifications</p>
-                <p className="quick-action-value">{notifications.filter(n => n.unread).length} New</p>
+                <p className="quick-action-value">
+                  {notifications.filter((n) => n.unread).length} New
+                </p>
               </div>
             </div>
           </Card>
@@ -155,13 +221,22 @@ export default function PatientDashboard({ onNavigate, userProfile }: PatientDas
                       </div>
                       <div>
                         <h3 className="doctor-name">{appointment.doctor}</h3>
-                        <p className="doctor-specialty">{appointment.specialty}</p>
+                        <p className="doctor-specialty">
+                          {appointment.specialty}
+                        </p>
                       </div>
                     </div>
                     <Badge
-                      variant={appointment.status === 'Confirmed' ? 'default' : 'secondary'}
-                      className={`status-badge ${appointment.status === 'Confirmed' ? 'status-confirmed' : 'status-pending'}`}
-                    >
+                      variant={
+                        appointment.status === "Confirmed"
+                          ? "default"
+                          : "secondary"
+                      }
+                      className={`status-badge ${
+                        appointment.status === "Confirmed"
+                          ? "status-confirmed"
+                          : "status-pending"
+                      }`}>
                       {appointment.status}
                     </Badge>
                   </div>
@@ -177,9 +252,7 @@ export default function PatientDashboard({ onNavigate, userProfile }: PatientDas
                     </div>
                   </div>
 
-                  <p className="appointment-clinic">
-                    📍 {appointment.clinic}
-                  </p>
+                  <p className="appointment-clinic">📍 {appointment.clinic}</p>
                 </Card>
               ))}
             </div>
@@ -211,15 +284,18 @@ export default function PatientDashboard({ onNavigate, userProfile }: PatientDas
                   <div
                     key={notification.id}
                     className={`notification-sidebar-item ${
-                      notification.unread ? 'notification-unread' : 'notification-read'
-                    }`}
-                  >
+                      notification.unread
+                        ? "notification-unread"
+                        : "notification-read"
+                    }`}>
                     <div className="notification-sidebar-content">
                       {notification.unread && (
                         <div className="notification-unread-indicator" />
                       )}
                       <div className="notification-sidebar-details">
-                        <p className="notification-message">{notification.message}</p>
+                        <p className="notification-message">
+                          {notification.message}
+                        </p>
                         <p className="notification-time">{notification.time}</p>
                       </div>
                     </div>

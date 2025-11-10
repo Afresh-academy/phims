@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Search,
   Calendar as CalendarIcon,
@@ -19,6 +19,7 @@ import { Label } from "../UI/label";
 import PatientLayout from "../shared/PatientLayout";
 import { BookingData } from "../../App";
 import { toast } from "sonner";
+import authService from "../../services/authService";
 
 interface BookAppointmentProps {
   onNavigate: (screen: string) => void;
@@ -91,6 +92,14 @@ const timeSlots = [
   "04:30 PM",
 ];
 
+interface Hospital {
+  name: string;
+  doctors: Array<{
+    name: string;
+    specialty: string;
+  }>;
+}
+
 export default function BookAppointment({
   onNavigate,
   onBookingComplete,
@@ -102,17 +111,28 @@ export default function BookAppointment({
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
   const [selectedTime, setSelectedTime] = useState("");
 
+  const [bookDoctor, setBookDoctor] = useState<Hospital[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
   const userProfile = {
     name: "Cbrillaince",
     email: "cbrillaince@example.com",
     phone: "+1 234 567 8900",
   };
 
-  const filteredDoctors = doctors.filter(
-    (doctor) =>
-      doctor.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      doctor.specialty.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      doctor.clinic.toLowerCase().includes(searchQuery.toLowerCase())
+  const filteredDoctors = bookDoctor.flatMap((hospital) =>
+    hospital.doctors
+      .filter(
+        (doctor) =>
+          doctor.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          doctor.specialty.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          hospital.name.toLowerCase().includes(searchQuery.toLowerCase())
+      )
+      .map((doctor) => ({
+        ...doctor,
+        clinic: hospital.name,
+      }))
   );
 
   const handleBookAppointment = () => {
@@ -138,12 +158,47 @@ export default function BookAppointment({
     onBookingComplete(booking);
   };
 
+  // Fetch hospitals data on component mount
+  useEffect(() => {
+    const fetchHospitalsData = async () => {
+      try {
+        console.log("🔄 Fetching hospitals data from backend...");
+
+        // Add a small delay to allow token storage to complete after signup
+        await new Promise((resolve) => setTimeout(resolve, 200));
+
+        // Call the backend API directly
+        // The API will return an error if not authenticated
+        const response = await authService.patientBooking();
+
+        console.log("📊 Hospitals API response:", response);
+
+        // Check if request was successful
+        if (response.success) {
+          setBookDoctor(response.hospitals || []);
+          console.log("✅ Hospitals data set:", response.hospitals);
+        } else {
+          // If authentication failed, the error message will tell us
+          console.warn("⚠️ Failed to fetch hospitals:", response.message);
+          setError(response.message || "Failed to fetch hospitals data");
+        }
+      } catch (error: any) {
+        console.error("❌ Error fetching hospitals data:", error);
+        setError(error.message || "Failed to load hospitals data");
+      } finally {
+        setLoading(false);
+        console.log("🔍 Patient - hospitals data fetch complete");
+      }
+    };
+
+    fetchHospitalsData();
+  }, []);
+
   return (
     <PatientLayout
       onNavigate={onNavigate}
       activeScreen="book-appointment"
-      userProfile={userProfile}
-    >
+      userProfile={userProfile}>
       <div className="book-appointment-container">
         {/* Header */}
         <div>
@@ -172,36 +227,37 @@ export default function BookAppointment({
           <div className="doctors-section">
             <h2 className="doctors-title">Available Doctors</h2>
 
-            {filteredDoctors.map((doctor) => (
+            {filteredDoctors.map((doctor, index) => (
               <Card
-                key={doctor.id}
-                className={`doctor-card ${
-                  selectedDoctor?.id === doctor.id ? "doctor-card-selected" : ""
-                } ${!doctor.available ? "doctor-card-unavailable" : ""}`}
-                onClick={() => doctor.available && setSelectedDoctor(doctor)}
+                key={index}
+                // className={`doctor-card ${
+                //   selectedDoctor?.id === doctor.id ? "doctor-card-selected" : ""
+                // } ${!doctor.available ? "doctor-card-unavailable" : ""}`}
+                className="doctor-card"
+                // onClick={() => doctor.available && setSelectedDoctor(doctor)}
               >
                 <div className="doctor-card-content">
                   <div className="flex items-start gap-4 flex-1">
-                    <div className="doctor-avatar">{doctor.image}</div>
+                    {/* <div className="doctor-avatar">{doctor.image}</div> */}
                     <div className="doctor-info">
                       <div className="doctor-header">
                         <div>
                           <h3 className="doctor-name">{doctor.name}</h3>
                           <p className="doctor-specialty">{doctor.specialty}</p>
                         </div>
-                        {!doctor.available && (
+                        {/* {!doctor.available && (
                           <Badge variant="secondary">Not Available</Badge>
-                        )}
+                        )} */}
                       </div>
 
                       <div className="doctor-rating">
                         <Star className="rating-star" />
-                        <span>{doctor.rating}</span>
-                        <span className="rating-count">({doctor.reviews})</span>
+                        {/* <span>{doctor.rating}</span> */}
+                        {/* <span className="rating-count">({doctor.reviews})</span> */}
                       </div>
 
                       <div className="doctor-experience">
-                        {doctor.experience}
+                        {/* {doctor.experience} */}
                       </div>
 
                       <div className="doctor-clinic">
@@ -212,7 +268,7 @@ export default function BookAppointment({
                       <div className="doctor-footer">
                         <div className="doctor-fee">
                           <DollarSign className="fee-icon" />
-                          <span className="fee-amount">${doctor.fee}</span>
+                          {/* <span className="fee-amount">${doctor.fee}</span> */}
                           <span className="fee-label">consultation fee</span>
                         </div>
                       </div>
@@ -248,8 +304,7 @@ export default function BookAppointment({
                       <PopoverTrigger asChild>
                         <Button
                           variant="outline"
-                          className="date-picker-trigger"
-                        >
+                          className="date-picker-trigger">
                           <CalendarIcon className="calendar-icon" />
                           {selectedDate ? (
                             selectedDate.toLocaleDateString("en-US", {
@@ -281,8 +336,7 @@ export default function BookAppointment({
                       <Label className="time-slots-label">Select Time</Label>
                       <RadioGroup
                         value={selectedTime}
-                        onValueChange={setSelectedTime}
-                      >
+                        onValueChange={setSelectedTime}>
                         <div className="time-slots-grid">
                           {timeSlots.map((time) => (
                             <div key={time}>
@@ -326,8 +380,7 @@ export default function BookAppointment({
 
                       <Button
                         onClick={handleBookAppointment}
-                        className="book-button"
-                      >
+                        className="book-button">
                         Proceed to Payment
                         <ArrowRight className="book-button-icon" />
                       </Button>

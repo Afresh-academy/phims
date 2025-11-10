@@ -2,13 +2,12 @@ import axios, { AxiosError } from "axios";
 import { AuthResponse, SignupData, LoginData, User } from "../types";
 
 // VITE: Correct way to access environment variables
-const API_URL =import.meta.env.VITE_API_URL || "https://phealth-care.onrender.com";
+const API_URL =
+  import.meta.env.VITE_API_URL || "https://phealth-care.onrender.com";
 
-
-  // VITE: Correct way to access environment variables
+// VITE: Correct way to access environment variables
 // const _IM = import.meta as unknown as { env: Record<string, any> };
 // const API_URL = _IM.env.VITE_API_URL || "https://phealth-care.onrender.com";
-
 
 console.log("🔍 authService - API_URL:", API_URL);
 // console.log("🔍 authService - Environment:", import.meta.env.MODE);
@@ -545,8 +544,6 @@ export const patientBooking = async (): Promise<any> => {
   }
 };
 
-
-
 export const signup = async (data: SignupData): Promise<AuthResponse> => {
   try {
     console.log("🔍 authService - Sending signup data:", {
@@ -655,8 +652,6 @@ export const patientLogin = async (data: LoginData): Promise<AuthResponse> => {
     return handleError(error);
   }
 };
-
-
 
 export const adminLogin = async (data: LoginData): Promise<AuthResponse> => {
   try {
@@ -800,7 +795,7 @@ const authService = {
   isAuthenticated,
   adminDashboard,
   patientBooking,
-  displayListOfHospitals
+  displayListOfHospitals,
 };
 
 export default authService;

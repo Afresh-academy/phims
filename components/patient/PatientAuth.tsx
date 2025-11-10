@@ -85,8 +85,7 @@ export default function PatientAuth({ onAuth, onBack }: PatientAuthProps) {
 
     // Validate all fields before submission
     const emailValidation = validateEmail(loginData.email);
-    const hasErrors =
-      !emailValidation.isValid || !loginData.password;
+    const hasErrors = !emailValidation.isValid || !loginData.password;
 
     if (hasErrors) {
       console.log("🔍 PatientAuth - Login validation errors found");

@@ -43,7 +43,6 @@ export interface ValidationResult {
   message: string;
 }
 
-
 // Types for API response
 export interface DashboardData {
   totalBookings: number;
