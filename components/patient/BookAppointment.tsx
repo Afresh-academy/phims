@@ -5,7 +5,7 @@ import {
   Clock,
   MapPin,
   Star,
-  DollarSign,
+  Banknote,
   ArrowRight,
 } from "lucide-react";
 import { Button } from "../UI/button";
@@ -34,7 +34,7 @@ const doctors = [
     rating: 4.9,
     reviews: 234,
     experience: "15 years",
-    fee: 150,
+    fee: 215284.50,
     available: true,
     image: "👩‍⚕️",
   },
@@ -46,7 +46,7 @@ const doctors = [
     rating: 4.8,
     reviews: 189,
     experience: "12 years",
-    fee: 100,
+    fee: 143523,
     available: true,
     image: "👨‍⚕️",
   },
@@ -58,7 +58,7 @@ const doctors = [
     rating: 4.9,
     reviews: 312,
     experience: "10 years",
-    fee: 120,
+    fee: 17227,
     available: true,
     image: "👩‍⚕️",
   },
@@ -70,7 +70,7 @@ const doctors = [
     rating: 4.7,
     reviews: 156,
     experience: "18 years",
-    fee: 180,
+    fee: 258341,
     available: false,
     image: "👨‍⚕️",
   },
@@ -211,8 +211,8 @@ export default function BookAppointment({
 
                       <div className="doctor-footer">
                         <div className="doctor-fee">
-                          <DollarSign className="fee-icon" />
-                          <span className="fee-amount">${doctor.fee}</span>
+                          <Banknote className="fee-icon" />
+                          <span className="fee-amount">₦{doctor.fee}</span>
                           <span className="fee-label">consultation fee</span>
                         </div>
                       </div>

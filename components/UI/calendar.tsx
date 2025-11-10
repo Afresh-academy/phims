@@ -4,7 +4,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import { DayPicker, type DayPickerProps } from "react-day-picker";
 
 import { cn } from "../UI/utils";
-import { Button } from "../UI/button";
+import { buttonVariants } from "../UI/button";
 
 function Calendar({
   className,
@@ -23,7 +23,7 @@ function Calendar({
         caption_label: "text-sm font-medium",
         nav: "flex items-center gap-1",
         nav_button: cn(
-          Button({ variant: "outline" }),
+          buttonVariants({ variant: "outline" }),
           "size-7 bg-transparent p-0 opacity-50 hover:opacity-100",
         ),
         nav_button_previous: "absolute left-1",
@@ -40,7 +40,7 @@ function Calendar({
             : "[&:has([aria-selected])]:rounded-md",
         ),
         day: cn(
-          Button({ variant: "ghost" }),
+          buttonVariants({ variant: "ghost" }),
           "size-8 p-0 font-normal aria-selected:opacity-100",
         ),
         day_range_start:
@@ -59,11 +59,11 @@ function Calendar({
         ...classNames,
       }}
       components={{
-        IconLeft: (props: { className?: string }) => (
-          <ChevronLeft className={cn("size-4", props.className)} />
+        IconLeft: ({ className: iconClassName }: { className?: string }) => (
+          <ChevronLeft className={cn("size-4", iconClassName)} />
         ),
-        IconRight: (props: { className?: string }) => (
-          <ChevronRight className={cn("size-4", props.className)} />
+        IconRight: ({ className: iconClassName }: { className?: string }) => (
+          <ChevronRight className={cn("size-4", iconClassName)} />
         ),
       }}
       {...props}
