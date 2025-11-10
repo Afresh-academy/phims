@@ -22,13 +22,14 @@ export interface AuthResponse {
 }
 
 export interface SignupData {
-  name: string;
+  firstName: string;
+  lastName: string;
   email: string;
   phone: string;
   state: string;
   localGov: string;
   password: string;
-  confirmPassword: string;
+  confirmPassword?: string;
 }
 
 export interface LoginData {
@@ -40,4 +41,22 @@ export interface LoginData {
 export interface ValidationResult {
   isValid: boolean;
   message: string;
+}
+
+
+// Types for API response
+export interface DashboardData {
+  totalBookings: number;
+  totalPatients: number;
+  completedBookings: number;
+  totalRevenue: number;
+  governmentRevenue: number;
+  hospitalRevenue: number;
+  recentBookings: any[];
+}
+
+export interface ApiResponse {
+  success: boolean;
+  dashboard: DashboardData;
+  message?: string;
 }

@@ -4,10 +4,25 @@ import { Card } from '../UI/card';
 import { Badge } from '../UI/badge';
 import AdminLayout from '../shared/AdminLayout';
 import { AreaChart, Area, BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
+import { useEffect, useState } from 'react';
+import authService from '../../services/authService';
+
 
 interface AdminDashboardProps {
   onNavigate: (screen: string) => void;
 }
+
+// Types for API response
+interface DashboardData {
+  totalBookings: number;
+  totalPatients: number;
+  completedBookings: number;
+  totalRevenue: number;
+  governmentRevenue: number;
+  hospitalRevenue: number;
+  recentBookings: any[];
+}
+
 
 // Mock Data
 const revenueData = [
@@ -42,6 +57,67 @@ const recentBookings = [
 ];
 
 export default function AdminDashboard({ onNavigate }: AdminDashboardProps) {
+
+  
+  const [dashboardData, setDashboardData] = useState<DashboardData | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  // Fetch dashboard data on component mount
+ useEffect(() => {
+  const fetchDashboardData = async () => {
+    try {
+      console.log("🔄 Fetching dashboard data from authService...");
+      
+      // Check if user is authenticated before fetching
+      if (!authService.isAuthenticated()) {
+        console.warn("⚠️ User not authenticated, redirecting to login...");
+        // navigate('/admin/login');
+        return;
+      }
+
+      const data = await authService.adminDashboard();
+      
+      console.log("📊 Dashboard API response:", data);
+
+      if (data.success) {
+        setDashboardData(data.data);
+      } else {
+        throw new Error(data.message || "Failed to fetch dashboard data");
+      }
+    } catch (error: any) {
+      console.error("❌ Error fetching dashboard data:", error);
+      setError(error.message || "Failed to load dashboard data");
+      
+      // If unauthorized, redirect to login
+      if (error.message?.includes("token") || error.message?.includes("login")) {
+        setTimeout(() => 'load error', 2000);
+      }
+    } finally {
+      setLoading(false);
+      console.log("🔍 Admin - Dashboard data fetch complete");
+    }
+  };
+
+  fetchDashboardData();
+}, []);
+
+  // Format recent bookings from API
+  const formattedRecentBookings = dashboardData?.recentBookings?.map((booking: any, index: number) => ({
+    id: booking._id || index,
+    patient: booking.patient?.personalInfo?.firstName 
+      ? `${booking.patient.personalInfo.firstName} ${booking.patient.personalInfo.lastName}`
+      : 'Unknown Patient',
+    doctor: booking.doctor || 'Unknown Doctor',
+    amount: booking.payment?.amount || 0,
+    status: booking.status || 'Pending',
+    date: new Date(booking.createdAt).toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric'
+    })
+  })) || [];
+
   return (
     <AdminLayout onNavigate={onNavigate} activeScreen="admin-dashboard">
   <div className="dashboard-space">
@@ -257,7 +333,8 @@ export default function AdminDashboard({ onNavigate }: AdminDashboardProps) {
         </div>
 
         <div className="bookings-list">
-          {recentBookings.map((booking) => (
+          {formattedRecentBookings.length > 0 ? (
+                formattedRecentBookings.map((booking) => (
             <div 
               key={booking.id} 
               className="booking-item"
@@ -277,7 +354,12 @@ export default function AdminDashboard({ onNavigate }: AdminDashboardProps) {
                 </Badge>
               </div>
             </div>
-          ))}
+          ))
+          ): (
+                <div className="text-center py-8 text-gray-500">
+                  No recent bookings found
+                </div>
+              )}
         </div>
       </Card>
     </div>
