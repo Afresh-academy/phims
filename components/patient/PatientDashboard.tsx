@@ -20,6 +20,9 @@ interface PatientDashboardProps {
   userProfile: {
     name: string;
     email: string;
+    personalInfo: {};
+    medicalInfo: {};
+    
     phone: string;
   };
 }
@@ -85,6 +88,7 @@ export default function PatientDashboard({
   userProfile,
 }: PatientDashboardProps) {
   const [hospitals, setHospitals] = useState<Hospital[]>([]);
+  const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -123,6 +127,39 @@ export default function PatientDashboard({
 
     fetchHospitalsData();
   }, []);
+
+  useEffect(() => {
+  const fetchUserProfile = async () => {
+    try {
+      const response = await authService.getUserProfile();
+      if (response.success) {
+        console.log("✅ User profile loaded:", response.profile);
+        // Update your user state here
+        setUser(response.profile);
+      } else {
+        console.warn("⚠️ Failed to load user profile:", response.message);
+      }
+    } catch (error) {
+      console.error("❌ Error fetching user profile:", error);
+    }
+  };
+
+  fetchUserProfile();
+}, []);
+
+user && console.log("👤 Current user profile:", user.personalInfo.firstName);
+
+
+
+// Get the display name - use retrieved user data or fallback to props
+  const getDisplayName = () => {
+    if (user?.personalInfo?.firstName) {
+      return user.personalInfo.firstName;
+    }
+    
+    // Fallback to the prop name
+    return userProfile.name.split(" ")[0];
+  };
   return (
     <PatientLayout
       onNavigate={onNavigate}
@@ -134,7 +171,7 @@ export default function PatientDashboard({
           <div className="banner-content">
             <div>
               <h1 className="banner-title">
-                Welcome back, {userProfile.name.split(" ")[0]}!
+                Welcome back, {getDisplayName()}!
               </h1>
               <p className="banner-subtitle">
                 You have {upcomingAppointments.length} upcoming appointments

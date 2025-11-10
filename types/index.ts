@@ -38,6 +38,27 @@ export interface LoginData {
   location?: string;
 }
 
+export interface UserProfile {
+  id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  state?: string;
+  localGov?: string;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export interface UserProfileResponse {
+  success: boolean;
+  message: string;
+  data?: {
+    user: UserProfile;
+  };
+  user?: UserProfile; // Alternative response structure
+}
+
 export interface ValidationResult {
   isValid: boolean;
   message: string;

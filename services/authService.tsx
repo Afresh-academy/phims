@@ -653,6 +653,85 @@ export const patientLogin = async (data: LoginData): Promise<AuthResponse> => {
   }
 };
 
+export const getUserProfile = async (): Promise<any> => {
+  try {
+    console.log("🔍 authService - Fetching user profile...");
+
+    // Enhanced token verification with fallback
+    let currentToken = token;
+    if (!currentToken) {
+      console.log("🔄 No token in memory, checking sessionStorage...");
+      currentToken = sessionStorage.getItem("authToken");
+
+      if (!currentToken) {
+        console.warn("❌ No token available for profile request");
+        return {
+          success: false,
+          message: "Authentication required. Please login again.",
+          redirectToLogin: true,
+        };
+      }
+      // Update the token in memory
+      token = currentToken;
+    }
+
+    console.log("🔍 Token verification for profile request:", {
+      hasToken: !!currentToken,
+      tokenLength: currentToken.length,
+      tokenPreview: `${currentToken.substring(0, 20)}...`,
+    });
+
+    const response = await axiosInstance.get("/auth/profile");
+
+    console.log("✅ authService - User profile response:", response.data);
+
+    if (response.data.success) {
+      // Update the current user in memory and storage
+      currentUser = response.data.data?.user || response.data.user;
+      if (currentUser) {
+        sessionStorage.setItem("user", JSON.stringify(currentUser));
+        console.log("💾 Updated user data in storage:", currentUser);
+      }
+    }
+
+    return response.data;
+  } catch (error: any) {
+    console.error("❌ authService - User profile error:", error);
+
+    if (axios.isAxiosError(error)) {
+      const axiosError = error as AxiosError;
+
+      console.log("🔍 authService - Profile error details:", {
+        status: axiosError.response?.status,
+        message: axiosError.response?.data,
+        url: axiosError.config?.url,
+      });
+
+      if (axiosError.response?.status === 401) {
+        logout(); // Clear invalid token
+        return {
+          success: false,
+          message: "Session expired. Please login again.",
+          redirectToLogin: true,
+        };
+      }
+
+      // Return server error message
+      const errorData = axiosError.response?.data as any;
+      return {
+        success: false,
+        message: errorData?.message || "Failed to load user profile",
+        redirectToLogin: axiosError.response?.status === 401,
+      };
+    }
+
+    return {
+      success: false,
+      message: "Network error. Please check your connection.",
+    };
+  }
+};
+
 export const adminLogin = async (data: LoginData): Promise<AuthResponse> => {
   try {
     console.log("🔍 authService - Sending admin login request:", {
@@ -796,6 +875,7 @@ const authService = {
   adminDashboard,
   patientBooking,
   displayListOfHospitals,
+  getUserProfile
 };
 
 export default authService;
