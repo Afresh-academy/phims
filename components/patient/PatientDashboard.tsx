@@ -20,12 +20,29 @@ interface PatientDashboardProps {
   userProfile: {
     name: string;
     email: string;
-    personalInfo: {};
-    medicalInfo: {};
-    
+
     phone: string;
   };
 }
+
+interface UserData {
+  id: string;
+  email: string;
+  personalInfo: {
+    firstName: string;
+    lastName: string;
+    phone: string;
+    emergencyContact?: any;
+  };
+  medicalInfo: {
+    bloodGroup: string;
+    allergies: string[];
+    chronicConditions: string[];
+    medications: string[];
+  };
+  createdAt: string;
+}
+
 interface Hospital {
   name: string;
   doctors: Array<{
@@ -83,14 +100,32 @@ const healthRecordsSummary = [
   { label: "Prescriptions", value: "2 Active" },
 ];
 
+
+
 export default function PatientDashboard({
   onNavigate,
   userProfile,
 }: PatientDashboardProps) {
   const [hospitals, setHospitals] = useState<Hospital[]>([]);
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<UserData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState("");
+
+
+   const filteredDoctors = hospitals.flatMap((hospital) =>
+    hospital.doctors
+      .filter(
+        (doctor) =>
+          doctor.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          doctor.specialty.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          hospital.name.toLowerCase().includes(searchQuery.toLowerCase())
+      )
+      .map((doctor) => ({
+        ...doctor,
+        clinic: hospital.name,
+      }))
+  );
 
   // Fetch hospitals data on component mount
   useEffect(() => {
@@ -129,34 +164,32 @@ export default function PatientDashboard({
   }, []);
 
   useEffect(() => {
-  const fetchUserProfile = async () => {
-    try {
-      const response = await authService.getUserProfile();
-      if (response.success) {
-        console.log("✅ User profile loaded:", response.profile);
-        // Update your user state here
-        setUser(response.profile);
-      } else {
-        console.warn("⚠️ Failed to load user profile:", response.message);
+    const fetchUserProfile = async () => {
+      try {
+        const response = await authService.getUserProfile();
+        if (response.success) {
+          console.log("✅ User profile loaded:", response.profile);
+          // Update your user state here
+          setUser(response.profile);
+        } else {
+          console.warn("⚠️ Failed to load user profile:", response.message);
+        }
+      } catch (error) {
+        console.error("❌ Error fetching user profile:", error);
       }
-    } catch (error) {
-      console.error("❌ Error fetching user profile:", error);
-    }
-  };
+    };
 
-  fetchUserProfile();
-}, []);
+    fetchUserProfile();
+  }, []);
 
-user && console.log("👤 Current user profile:", user.personalInfo.firstName);
+  user && console.log("👤 Current user profile:", user.personalInfo.firstName);
 
-
-
-// Get the display name - use retrieved user data or fallback to props
+  // Get the display name - use retrieved user data or fallback to props
   const getDisplayName = () => {
     if (user?.personalInfo?.firstName) {
       return user.personalInfo.firstName;
     }
-    
+
     // Fallback to the prop name
     return userProfile.name.split(" ")[0];
   };
@@ -174,7 +207,7 @@ user && console.log("👤 Current user profile:", user.personalInfo.firstName);
                 Welcome back, {getDisplayName()}!
               </h1>
               <p className="banner-subtitle">
-                You have {upcomingAppointments.length} upcoming appointments
+                You have {filteredDoctors.length} upcoming appointments
               </p>
             </div>
             <div className="banner-icon-container">
@@ -249,21 +282,21 @@ user && console.log("👤 Current user profile:", user.personalInfo.firstName);
             </div>
 
             <div className="appointments-list">
-              {upcomingAppointments.map((appointment) => (
-                <Card key={appointment.id} className="appointment-card">
+              {filteredDoctors.map((appointment, index) => (
+                <Card key={index} className="appointment-card">
                   <div className="appointment-header">
                     <div className="appointment-doctor-info">
                       <div className="appointment-icon-container">
                         <User className="appointment-icon icon-blue" />
                       </div>
                       <div>
-                        <h3 className="doctor-name">{appointment.doctor}</h3>
+                        <h3 className="doctor-name">{appointment.name}</h3>
                         <p className="doctor-specialty">
                           {appointment.specialty}
                         </p>
                       </div>
                     </div>
-                    <Badge
+                    {/* <Badge
                       variant={
                         appointment.status === "Confirmed"
                           ? "default"
@@ -275,17 +308,17 @@ user && console.log("👤 Current user profile:", user.personalInfo.firstName);
                           : "status-pending"
                       }`}>
                       {appointment.status}
-                    </Badge>
+                    </Badge> */}
                   </div>
 
                   <div className="appointment-datetime">
                     <div className="datetime-item">
                       <Calendar className="datetime-icon" />
-                      {appointment.date}
+                      {/* {appointment.date} */}
                     </div>
                     <div className="datetime-item">
                       <Clock className="datetime-icon" />
-                      {appointment.time}
+                      {/* {appointment.time} */}
                     </div>
                   </div>
 
