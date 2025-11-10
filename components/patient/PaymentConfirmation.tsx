@@ -136,7 +136,7 @@ export default function PaymentConfirmation({
               <div className="flex justify-between">
                 <span className="text-gray-600">Consultation Fee</span>
                 <span className="text-gray-900">
-                  ${booking.amount.toFixed(2)}
+                  ₦{booking.amount.toFixed(2)}
                 </span>
               </div>
 
@@ -145,11 +145,11 @@ export default function PaymentConfirmation({
               <div className="space-y-2 text-sm">
                 <div className="flex justify-between text-gray-600">
                   <span>To Clinic (95%)</span>
-                  <span>${clinicAmount.toFixed(2)}</span>
+                  <span>₦{clinicAmount.toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between text-gray-600">
                   <span>Platform Fee (5%)</span>
-                  <span>${platformFee.toFixed(2)}</span>
+                  <span>₦{platformFee.toFixed(2)}</span>
                 </div>
               </div>
 
@@ -158,7 +158,7 @@ export default function PaymentConfirmation({
               <div className="flex justify-between">
                 <span className="text-gray-900">Total Paid</span>
                 <span className="text-green-600">
-                  ${booking.amount.toFixed(2)}
+                  ₦{booking.amount.toFixed(2)}
                 </span>
               </div>
             </div>
