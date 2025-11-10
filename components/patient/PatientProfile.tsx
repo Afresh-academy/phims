@@ -80,7 +80,7 @@ export default function PatientProfile({
             // Update form fields with actual user data
             if (userData.personalInfo) {
               setProfileData({
-                name: `${userData.personalInfo.firstName} ${userData.personalInfo.lastName}`,
+                name: getFullName(userData),
                 email: userData.email || userData.personalInfo.email || "",
                 phone: userData.personalInfo.phone || "",
               });
@@ -101,43 +101,15 @@ export default function PatientProfile({
     fetchUserProfile();
   }, []);
 
-  const handleSaveProfiless = async () => {
-    try {
-      setSaving(true);
-
-      const updateData = {
-        personalInfo: {
-          firstName: profileData.name.split(" ")[0],
-          lastName: profileData.name.split(" ").slice(1).join(" "),
-          phone: profileData.phone,
-        },
-      };
-
-      const response = await authService.updateProfile(updateData);
-
-      if (response.success) {
-        toast.success("Profile updated successfully!");
-        // Refresh user data
-        const refreshedResponse = await authService.getUserProfile();
-        if (refreshedResponse.success) {
-          const userData =
-            refreshedResponse.data?.user ||
-            refreshedResponse.user ||
-            refreshedResponse;
-          setUser(userData);
-        }
-      } else {
-        toast.error(response.message || "Failed to update profile");
-      }
-    } catch (error) {
-      console.error("Error updating profile:", error);
-      toast.error("Failed to update profile");
-    } finally {
-      setSaving(false);
+  // Get full name from user data (reusable function)
+  const getFullName = (userData?: any) => {
+    if (userData?.personalInfo) {
+      return `${userData.personalInfo.firstName} ${userData.personalInfo.lastName}`;
     }
+    return userProfile.name;
   };
 
-  const handleSaveProfilesss = async () => {
+  const handleSaveProfile = async () => {
     try {
       setSaving(true);
 
@@ -146,11 +118,9 @@ export default function PatientProfile({
       const lastName = nameParts.slice(1).join(" ") || "";
 
       const updateData = {
-        personalInfo: {
-          firstName: firstName,
-          lastName: lastName,
-          phone: profileData.phone,
-        },
+        firstName: firstName,
+        lastName: lastName,
+        phone: profileData.phone,
       };
 
       console.log("🔄 Sending update data:", updateData);
@@ -160,14 +130,15 @@ export default function PatientProfile({
       if (response.success) {
         toast.success("Profile updated successfully!");
 
+        // Refresh user data using the same structure as useEffect
         const refreshedResponse = await authService.getUserProfile();
         if (refreshedResponse.success) {
-          const userData = extractUserData(refreshedResponse);
+          const userData = refreshedResponse.profile || refreshedResponse;
           setUser(userData);
 
           if (userData.personalInfo) {
             setProfileData({
-              name: `${userData.personalInfo.firstName} ${userData.personalInfo.lastName}`,
+              name: getFullName(userData), // Using the reusable function
               email: userData.email || userData.personalInfo.email || "",
               phone: userData.personalInfo.phone || "",
             });
@@ -184,57 +155,6 @@ export default function PatientProfile({
       setSaving(false);
     }
   };
-
-  const handleSaveProfile = async () => {
-  try {
-    setSaving(true);
-
-    const nameParts = profileData.name.trim().split(/\s+/);
-    const firstName = nameParts[0] || "";
-    const lastName = nameParts.slice(1).join(" ") || "";
-
-    const updateData = {
-      personalInfo: {
-        firstName: firstName,
-        lastName: lastName,
-        phone: profileData.phone,
-      },
-    };
-
-    console.log("🔄 Sending update data:", updateData);
-
-    const response = await authService.updateProfile(updateData);
-
-    if (response.success) {
-      toast.success("Profile updated successfully!");
-      
-      // Refresh user data using the same structure as useEffect
-      const refreshedResponse = await authService.getUserProfile();
-      if (refreshedResponse.success) {
-        const userData = refreshedResponse.profile || refreshedResponse;
-        setUser(userData);
-        
-        if (userData.personalInfo) {
-          setProfileData({
-            name: `${userData.personalInfo.firstName} ${userData.personalInfo.lastName}`,
-            email: userData.email || userData.personalInfo.email || "",
-            phone: userData.personalInfo.phone || "",
-          });
-        }
-      }
-    } else {
-      console.error("❌ Profile update failed:", response);
-      toast.error(response.message || "Failed to update profile");
-    }
-  } catch (error) {
-    console.error("❌ Error updating profile:", error);
-    toast.error("Failed to update profile");
-  } finally {
-    setSaving(false);
-  }
-};
-
-
 
   const handleLogout = () => {
     authService.logout();
@@ -260,17 +180,6 @@ export default function PatientProfile({
     }
     return userProfile.name.charAt(0).toUpperCase();
   };
-
-  // Get full name from user data
-  const getFullName = () => {
-    if (user?.personalInfo) {
-      return `${user.personalInfo.firstName} ${user.personalInfo.lastName}`;
-    }
-    return userProfile.name;
-  };
-
-
-
 
   if (loading) {
     return (
@@ -440,7 +349,7 @@ export default function PatientProfile({
                   {getUserInitials()}
                 </span>
               </div>
-              <h3 className="text-gray-900 mb-1">{getFullName()}</h3>
+              <h3 className="text-gray-900 mb-1">{getFullName(user)}</h3>
               <p className="text-sm text-gray-600">
                 {user?.email || profileData.email}
               </p>

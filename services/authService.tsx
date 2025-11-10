@@ -432,6 +432,7 @@ export const displayListOfHospitals = async (): Promise<any> => {
       }
       // Update the token in memory
       token = currentToken;
+      console.log('User token', token)
     }
 
     console.log("🔍 Token verification:", {
@@ -499,6 +500,8 @@ export const patientBooking = async (): Promise<any> => {
       }
       // Update the token in memory
       token = currentToken;
+
+      console.log("🔍 Token loaded from sessionStorage into memory", {token});
     }
 
     console.log("🔍 Token verification:", {
@@ -849,14 +852,12 @@ export const getCurrentUser = (): User | null => {
 };
 
 // Profile Settings API functions
+// Fixed updateProfile function in authService.tsx
 export const updateProfile = async (profileData: any): Promise<any> => {
   try {
-    console.log("🔍 authService - Updating user profile:", {
-      ...profileData,
-      password: profileData.password ? "[REDACTED]" : undefined,
-    });
+    console.log("🔍 authService - Updating user profile:", profileData);
 
-    // Enhanced token verification with fallback
+    // Enhanced token verification
     let currentToken = token;
     if (!currentToken) {
       console.log("🔄 No token in memory, checking sessionStorage...");
@@ -870,14 +871,11 @@ export const updateProfile = async (profileData: any): Promise<any> => {
           redirectToLogin: true,
         };
       }
-      // Update the token in memory
       token = currentToken;
     }
 
-    console.log("🔍 Token verification for profile update:", {
-      hasToken: !!currentToken,
-      tokenPreview: `${currentToken.substring(0, 20)}...`,
-    });
+    console.log("🔍 Making PUT request to /auth/profile");
+    console.log("📤 Request data:", profileData);
 
     const response = await axiosInstance.put("/auth/profile", profileData);
 
@@ -885,14 +883,20 @@ export const updateProfile = async (profileData: any): Promise<any> => {
 
     if (response.data.success) {
       // Update the current user in memory and storage
-      const updatedUser = response.data.data?.user || response.data.user;
-      if (updatedUser) {
-        currentUser = updatedUser;
+      const updatedProfile = response.data.profile;
+      if (updatedProfile) {
+        currentUser = {
+          ...currentUser,
+          id: updatedProfile.id,
+          email: updatedProfile.email,
+          name: `${updatedProfile.personalInfo?.firstName} ${updatedProfile.personalInfo?.lastName}`,
+          phone: updatedProfile.personalInfo?.phone
+        } as any;
         sessionStorage.setItem("user", JSON.stringify(currentUser));
-        console.log("💾 Updated user data in storage:", currentUser);
+        console.log("💾 Updated user data in storage");
       }
       
-      toast.success("Profile updated successfully!");
+      // DON'T show toast here - let the component handle it
     }
 
     return response.data;
@@ -904,7 +908,8 @@ export const updateProfile = async (profileData: any): Promise<any> => {
 
       console.log("🔍 authService - Profile update error details:", {
         status: axiosError.response?.status,
-        message: axiosError.response?.data,
+        data: axiosError.response?.data,
+        message: axiosError.message,
       });
 
       if (axiosError.response?.status === 401) {
@@ -918,17 +923,14 @@ export const updateProfile = async (profileData: any): Promise<any> => {
 
       // Return server error message
       const errorData = axiosError.response?.data as any;
-      const errorMessage = errorData?.message || "Failed to update profile";
-      toast.error(errorMessage);
-      
       return {
         success: false,
-        message: errorMessage,
-        redirectToLogin: axiosError.response?.status === 401,
+        message: errorData?.message || errorData?.error || "Failed to update profile",
+        error: errorData?.error, // Include detailed error
+        redirectToLogin: false,
       };
     }
 
-    toast.error("Network error. Please check your connection.");
     return {
       success: false,
       message: "Network error. Please check your connection.",
