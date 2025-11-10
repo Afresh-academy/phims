@@ -1,5 +1,7 @@
 import axios, { AxiosError } from "axios";
 import { AuthResponse, SignupData, LoginData, User } from "../types";
+import { toast } from "sonner";
+
 
 // VITE: Correct way to access environment variables
 const API_URL =
@@ -846,6 +848,172 @@ export const getCurrentUser = (): User | null => {
   return null;
 };
 
+// Profile Settings API functions
+export const updateProfile = async (profileData: any): Promise<any> => {
+  try {
+    console.log("🔍 authService - Updating user profile:", {
+      ...profileData,
+      password: profileData.password ? "[REDACTED]" : undefined,
+    });
+
+    // Enhanced token verification with fallback
+    let currentToken = token;
+    if (!currentToken) {
+      console.log("🔄 No token in memory, checking sessionStorage...");
+      currentToken = sessionStorage.getItem("authToken");
+
+      if (!currentToken) {
+        console.warn("❌ No token available for profile update request");
+        return {
+          success: false,
+          message: "Authentication required. Please login again.",
+          redirectToLogin: true,
+        };
+      }
+      // Update the token in memory
+      token = currentToken;
+    }
+
+    console.log("🔍 Token verification for profile update:", {
+      hasToken: !!currentToken,
+      tokenPreview: `${currentToken.substring(0, 20)}...`,
+    });
+
+    const response = await axiosInstance.put("/auth/profile", profileData);
+
+    console.log("✅ authService - Profile update response:", response.data);
+
+    if (response.data.success) {
+      // Update the current user in memory and storage
+      const updatedUser = response.data.data?.user || response.data.user;
+      if (updatedUser) {
+        currentUser = updatedUser;
+        sessionStorage.setItem("user", JSON.stringify(currentUser));
+        console.log("💾 Updated user data in storage:", currentUser);
+      }
+      
+      toast.success("Profile updated successfully!");
+    }
+
+    return response.data;
+  } catch (error: any) {
+    console.error("❌ authService - Profile update error:", error);
+
+    if (axios.isAxiosError(error)) {
+      const axiosError = error as AxiosError;
+
+      console.log("🔍 authService - Profile update error details:", {
+        status: axiosError.response?.status,
+        message: axiosError.response?.data,
+      });
+
+      if (axiosError.response?.status === 401) {
+        logout();
+        return {
+          success: false,
+          message: "Session expired. Please login again.",
+          redirectToLogin: true,
+        };
+      }
+
+      // Return server error message
+      const errorData = axiosError.response?.data as any;
+      const errorMessage = errorData?.message || "Failed to update profile";
+      toast.error(errorMessage);
+      
+      return {
+        success: false,
+        message: errorMessage,
+        redirectToLogin: axiosError.response?.status === 401,
+      };
+    }
+
+    toast.error("Network error. Please check your connection.");
+    return {
+      success: false,
+      message: "Network error. Please check your connection.",
+    };
+  }
+};
+
+export const changePassword = async (passwordData: {
+  currentPassword: string;
+  newPassword: string;
+  confirmPassword: string;
+}): Promise<any> => {
+  try {
+    console.log("🔍 authService - Changing password");
+
+    // Enhanced token verification with fallback
+    let currentToken = token;
+    if (!currentToken) {
+      console.log("🔄 No token in memory, checking sessionStorage...");
+      currentToken = sessionStorage.getItem("authToken");
+
+      if (!currentToken) {
+        console.warn("❌ No token available for password change request");
+        return {
+          success: false,
+          message: "Authentication required. Please login again.",
+          redirectToLogin: true,
+        };
+      }
+      token = currentToken;
+    }
+
+    console.log("🔍 Token verification for password change:", {
+      hasToken: !!currentToken,
+      tokenPreview: `${currentToken.substring(0, 20)}...`,
+    });
+
+    const response = await axiosInstance.put("/auth/change-password", passwordData);
+
+    console.log("✅ authService - Password change response:", response.data);
+
+    if (response.data.success) {
+      toast.success("Password changed successfully!");
+    }
+
+    return response.data;
+  } catch (error: any) {
+    console.error("❌ authService - Password change error:", error);
+
+    if (axios.isAxiosError(error)) {
+      const axiosError = error as AxiosError;
+
+      console.log("🔍 authService - Password change error details:", {
+        status: axiosError.response?.status,
+        message: axiosError.response?.data,
+      });
+
+      if (axiosError.response?.status === 401) {
+        logout();
+        return {
+          success: false,
+          message: "Session expired. Please login again.",
+          redirectToLogin: true,
+        };
+      }
+
+      const errorData = axiosError.response?.data as any;
+      const errorMessage = errorData?.message || "Failed to change password";
+      toast.error(errorMessage);
+      
+      return {
+        success: false,
+        message: errorMessage,
+        redirectToLogin: axiosError.response?.status === 401,
+      };
+    }
+
+    toast.error("Network error. Please check your connection.");
+    return {
+      success: false,
+      message: "Network error. Please check your connection.",
+    };
+  }
+};
+
 // export const isAuthenticated = (): boolean => {
 //   // First check in-memory token
 //   if (token !== null) {
@@ -875,7 +1043,9 @@ const authService = {
   adminDashboard,
   patientBooking,
   displayListOfHospitals,
-  getUserProfile
+  getUserProfile,
+   updateProfile,
+  changePassword,
 };
 
 export default authService;
